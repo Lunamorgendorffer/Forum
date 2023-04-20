@@ -1,0 +1,42 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+header nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+    padding: 15px;
+    background-color: #032f70;
+}
+
+header nav a{
+    color: #fff;
+}
+
+header nav a:hover{
+    background-color: #3a0b8b;
+    color: #fff;
+}
+
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 100px;
+    background-color: #032f70;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    flex: 1;
+}
+
+footer a {
+    color: #fff;
+}
