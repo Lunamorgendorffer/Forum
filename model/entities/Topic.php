@@ -58,8 +58,7 @@
         /**
          * Get the value of user
          */ 
-        public function getUser()
-        {
+        public function getUser(){
                 return $this->user;
         }
 
