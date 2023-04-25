@@ -6,8 +6,6 @@
     final class User extends Entity{
 
         private $id;
-        private $firstName;
-        private $lastName.
         private $pseudo;
         private $mail;
         private $registerDate;
@@ -16,7 +14,8 @@
         public function __construct($data){         
             $this->hydrate($data);        
         }
- 
+
+
         /**
          * Get the value of id
          */ 
@@ -108,4 +107,6 @@
 
                 return $this;
         }
-    }
+
+        
+}
