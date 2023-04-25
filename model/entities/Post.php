@@ -8,7 +8,7 @@
         private $id;
         private $message;
         private $user;
-        private $creationdate;
+        private $messCreationdate;
         private $topic;
 
         public function __construct($data){         
@@ -69,13 +69,13 @@
                 return $this;
         }
 
-        public function getCreationdate(){
-            $formattedDate = $this->creationdate->format("d/m/Y, H:i:s");
+        public function getMesscreationdate(){
+            $formattedDate = $this->messCreationdate->format("d/m/Y, H:i:s");
             return $formattedDate;
         }
 
-        public function setCreationdate($date){
-            $this->creationdate = new \DateTime($date);
+        public function setMesscreationdate($date){
+            $this->messCreationdate = new \DateTime($date);
             return $this;
         }
 
