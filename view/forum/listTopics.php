@@ -1,6 +1,8 @@
 <?php
 
 $topics = $result["data"]['topics'];
+var_dump($topics)
+
     
 ?>
 
@@ -8,11 +10,13 @@ $topics = $result["data"]['topics'];
 
 <?php
 foreach($topics as $topic ){
+    // var_dump($topics)
 
     ?>
-    <p><?=$topic->getTitle()?></p>
-    <?php
+    <p><?=$topic->getTitle()." ".$topic->getCreationdate()." de ".$topic->getUser()->getPseudo()."<br>"?></p>
+   <?php
 }
+
 
 
   
