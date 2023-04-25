@@ -15,5 +15,22 @@
             parent::connect(); // par son parent de me prendre la fonc connect 
         }
 
+        // fonc pour recuperer les topics crée
+        public function findAllPostUser(){
+
+            $sql = "SELECT p.message, p.messCreationDate, p.user_id
+            FROM post p
+            INNER JOIN user u ON u.id_user= p.user_id
+            ";
+
+            return $this->getMultipleResults(
+                DAO::select($sql), 
+                $this->className
+            );
+    
+
+           
+        }
+
 
     }
