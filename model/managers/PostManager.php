@@ -8,7 +8,7 @@
     class PostManager extends Manager{
 
         protected $className = "Model\Entities\Post"; // variable qui va prendre ?
-        protected $tableName = "message"; // le nom de la table que je vais consulter
+        protected $tableName = "post"; // le nom de la table que je vais consulter
 
         // fonc pour me connecter à la db 
         public function __construct(){ 
