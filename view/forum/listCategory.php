@@ -1,10 +1,10 @@
 <?php
 
-$categories = $result["data"]['category'];
+$categories = $result["data"]['categories'];
     
 ?>
 
-<h1>liste message</h1>
+<h1>liste Categories</h1>
 
 <?php
 foreach($categories as $category ){
