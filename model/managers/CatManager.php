@@ -15,7 +15,21 @@
             parent::connect(); // par son parent de me prendre la fonc connect 
         }
 
-       
+       // fonc pour afficher les topic par categorie 
+       public function catByTopic($id){
+        $sql = "SELECT *
+        FROM category c
+        INNER JOIN topic t ON t.category_id = c.id_category
+        WHERE c.id_category = :id";
+
+        $params =['id'=> $id];
+
+        return $this->getMultipleResults(
+            DAO::select($sql,$params), 
+            $this->className
+        );
+
+    }
 
 
     }
