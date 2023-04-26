@@ -9,6 +9,7 @@
         private $title;
         private $user;
         private $creationdate;
+        private $category;
         private $closed;
 
         public function __construct($data){         
@@ -84,6 +85,26 @@
             return $this;
         }
 
+         /**
+         * Get the value of category
+         */ 
+        public function getCategory()
+        {
+                return $this->category;
+        }
+
+        /**
+         * Set the value of category
+         *
+         * @return  self
+         */ 
+        public function setCategory($category)
+        {
+                $this->category = $category;
+
+                return $this;
+        }
+
         /**
          * Get the value of closed
          */ 
@@ -103,4 +124,6 @@
 
                 return $this;
         }
-    }
+
+       
+}
