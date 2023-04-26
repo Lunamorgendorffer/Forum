@@ -28,20 +28,7 @@
                 $this->className
             );
         }
-        // fonc pour afficher les topic par categorie 
-        public function topicByCategorie(){
-            $sql = "SELECT *
-            FROM topic 
-            WHERE t.category_id = :id ";
-
-            $params =['id'=> $id];
-
-            return $this->getMultipleResults(
-                DAO::select($sql,$params), 
-                $this->className
-            );
-
-        }
+        
 
 
     }
