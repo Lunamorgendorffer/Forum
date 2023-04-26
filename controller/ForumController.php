@@ -75,7 +75,7 @@
             return [
                 "view" => VIEW_DIR."forum/listCategory.php", //  On retourne un tableau contenant le chemin de la vue à afficher et les données à transmettre à la vue
                 "data" => [ //data prend la valeur d'un tableau qui contient Categories
-                    "categories" => $catManager->findAll(), // La méthode findAllPost() de la classe PostManager renvoie la liste des messages
+                    "categories" => $catManager->findAll()// La méthode findAll de la classe catManager renvoie la liste des categories
                 ]
             ];
 
