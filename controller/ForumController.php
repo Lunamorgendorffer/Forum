@@ -16,36 +16,56 @@
           
 
            $topicManager = new TopicManager();
-           $userManager = new UserManager();
-           $postManager = new PostManager();
-           $catManager = new CatManager();
         
             return [
                 "view" => VIEW_DIR."forum/listTopics.php", // renvoie la vue listtopics
                 "data" => [ //data prend la valeur d'un tableau qui contient topics 
-                    // "topics" => $topicManager->findAll(["creationdate", "DESC"]), // Dans topicManager va me chercher la fonc findAll, trié par creation date, 
                     "topics" => $topicManager->findAllTopicsUser(), // Dans topicManager va me chercher la fonc findAll, trié par creation date, 
-                ],
+                ], 
 
-                "view" => VIEW_DIR."forum/listUsers.php", // envoi à la vue listUsers
-                "data" => [ //data prend la valeur d'un tableau qui contient Users
-                    "users" => $userManager->findAll(), // Dans topicManager va me chercher la fonc findAll, trié par creation date, 
-                ],
-
-                "view" => VIEW_DIR."forum/listPosts.php", // envoi à la vue listUsers
-                "data" => [ //data prend la valeur d'un tableau qui contient Users
-                    "post" => $postManager->findAllPostUser(), // Dans topicManager va me chercher la fonc findAll, trié par creation date, 
-                ],
-
-                "view" => VIEW_DIR."forum/listCategory.php", // envoi à la vue listUsers
-                "data" => [ //data prend la valeur d'un tableau qui contient Users
-                    "category" => $catManager->findAll(), // Dans topicManager va me chercher la fonc findAll, trié par creation date, 
-                ],
             ];
 
-           
-            
+        }
         
+        // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des utilisateurs
+        public function viewUser(){
+            
+            $userManager = new UserManager(); // On instancie un objet de la classe UserManager pour récupérer la liste des utilisateurs
+
+            return[ // On retourne un tableau contenant le chemin de la vue à afficher et les données à transmettre à la vue
+                "view" => VIEW_DIR."forum/listUsers.php", 
+                "data" => [ 
+                    "users" => $userManager->findAll(), // La méthode findAll() de la classe UserManager renvoie la liste des utilisateurs
+                ]
+            ];
+        }
+
+         // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des messages
+        public function viewPost(){
+            $postManager = new PostManager(); // On instancie un objet de la classe PostManager pour récupérer la liste des messages
+
+            return [
+                "view" => VIEW_DIR."forum/listPosts.php", // On retourne un tableau contenant le chemin de la vue à afficher et les données à transmettre à la vue
+                "data" => [ //data prend la valeur d'un tableau qui contient Post
+                    "post" => $postManager->findAllPostUser(), // La méthode findAllPost() de la classe PostManager renvoie la liste des messages
+                ]
+
+            ];
+
+        }
+
+         // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des categories 
+        public function viewCat(){
+            
+            $catManager = new CatManager();
+
+            return [
+                "view" => VIEW_DIR."forum/listCategory.php", //  On retourne un tableau contenant le chemin de la vue à afficher et les données à transmettre à la vue
+                "data" => [ //data prend la valeur d'un tableau qui contient Categories
+                    "categories" => $catManager->findAll(), // La méthode findAllPost() de la classe PostManager renvoie la liste des messages
+                ]
+            ];
+
         }
 
     }
