@@ -6,18 +6,7 @@ $messages = $result["data"]["messages"];
  
 ?>
 
-<div class="infos">
-        <h4>posted by : <a href="index.php?ctrl=forum&action=detailUser&id=<?= $topic->getUser()->getId() ?>"><?= $topic->getUser()->getPseudo() . "</a> - " . $topic->getCreationdate() ?></h4>
-</div>
+<a href="index.php?ctrl=forum&action=detailUser&id=<?= $topic->getUser()->getId() ?>"><?= $topic->getUser()->getPseudo()?></a>
 
-<div class="preview">
-        <div class="title">
-            <strong>Title:</strong>
-            <p><?= $topic->getTitle() ?></p>
-        </div>
-
-        <div class="msg">
-            <strong>Message:</strong>
-            <p><?= $message->getMessage() ?></p>
-        </div>
-</div>
+<p><?= $topic->getTitle() ?></p>
+<p><?= $messages->getMessage() ?></p>
