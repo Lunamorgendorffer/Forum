@@ -19,7 +19,7 @@
         // fonc pour recuperer les topics crée
         public function findAllTopicsUser(){
 
-            $sql = "SELECT t.title, t.creationdate, t.user_id
+            $sql = "SELECT t.id_topic, t.title, t.creationdate, t.user_id
             FROM topic t 
             INNER JOIN user u ON u.id_user = t.user_id";
 
@@ -27,9 +27,20 @@
                 DAO::select($sql), 
                 $this->className
             );
-    
+        }
+        // fonc pour afficher les topic par categorie 
+        public function topicByCategorie(){
+            $sql = "SELECT *
+            FROM topic 
+            WHERE t.category_id = :id ";
 
-           
+            $params =['id'=> $id];
+
+            return $this->getMultipleResults(
+                DAO::select($sql,$params), 
+                $this->className
+            );
+
         }
 
 
