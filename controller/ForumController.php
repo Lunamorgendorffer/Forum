@@ -18,11 +18,24 @@
            $topicManager = new TopicManager();
         
             return [
-                "view" => VIEW_DIR."forum/listTopics.php", // renvoie la vue listtopics
+                "view" => VIEW_DIR."forum/topics/listTopics.php", // renvoie la vue listtopics
                 "data" => [ //data prend la valeur d'un tableau qui contient topics 
                     "topics" => $topicManager->findAllTopicsUser(), // Dans topicManager va me chercher la fonc findAll, trié par creation date, 
                 ], 
 
+            ];
+
+        }
+
+        public function detailTopic ($id){
+            $topicManager = new TopicManager();
+            $postManager = new PostManager();
+            return [
+                "view" => VIEW_DIR."forum/topics/detailTopic.php", // 
+                "data" => [ //data prend la valeur d'un tableau qui contient topics 
+                    "topic" => $topicManager->findOneById($id),
+                    "messages" => $postManager-> postFromTopicById($id) 
+                ]
             ];
 
         }
