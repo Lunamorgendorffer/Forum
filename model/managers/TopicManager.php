@@ -28,6 +28,22 @@
                 $this->className
             );
         }
+
+        public function TopicByCat($id){
+
+            $sql = "SELECT *  
+                FROM topic t
+                INNER JOIN category c ON c.id_category = t.category_id
+                WHERE t.category_id = :id "
+            ;
+            
+            $params =['id'=> $id];      
+    
+            return  $this->getMultipleResults(
+                DAO::select($sql, $params), 
+                $this->className
+            );
+        }
         
 
 
