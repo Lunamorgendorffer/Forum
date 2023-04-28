@@ -45,4 +45,29 @@
 
 
         }
+        
+        public function addPostByTopic ($id){
+            if(isset($_POST['submit'])){
+                
+                $post = filter_input(INPUT_POST, "post", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        
+                    if($post !== null ){
+    
+                        $sql = "INSERT INTO post () VALUES ()";
+        
+                        $params = [
+                        ];
+        
+                        $msg= $dao->executerRequete($sql, $params);
+
+                    } else {
+                        echo "Erreur 404
+                        ";
+                    }
+            } else {
+                echo "Pikachu";
+            }
+        }
+      
+        
     }
