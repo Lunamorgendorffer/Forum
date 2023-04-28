@@ -13,7 +13,7 @@ $categories = $result["data"]['categories'];
     <img img src="..." class="card-img-top" alt="...">
     <div class="card-body">
         <h5 class="card-title" style ="text-align: center; color: white;">catégorie</h5>
-        <h3 class="card-text" style="text-align: center; "><a style="color: white;" href="index.php?ctrl=forum&action=listTopics&id=<?= $category->getId()?>"><?=$category -> getNameCategory()?></a><br></h3>
+        <h3 class="card-text" style="text-align: center; "><a style="color: white;" href="index.php?ctrl=forum&action=findTopicsByCat&id=<?= $category->getId()?>"><?=$category -> getNameCategory()?></a><br></h3>
     </div>
 </div>
 <?php } ?>
