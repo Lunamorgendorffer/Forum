@@ -8,7 +8,7 @@
     use Model\Managers\TopicManager;
     use Model\Managers\PostManager;
     use Model\Managers\UserManager;
-    use Model\Managers\CatManager;
+    use Model\Managers\CategoryManager;
     
     class ForumController extends AbstractController implements ControllerInterface{
 
@@ -67,17 +67,48 @@
 
         }
 
+        public function addPostByTopic(){
+            $topicManager = new TopicManager();
+            $postManager = new PostManager();
+            return [
+                "view" => VIEW_DIR."forum/topics/detailTopic.php", // On retourne un tableau contenant le chemin de la vue à afficher et les données à transmettre à la vue
+                "data" => [ //data prend la valeur des tableaux 
+                    "topic" => $topicManager->findOneById($id),
+                    "post" => $postManager->add($data), 
+                ]
+
+            ];
+
+        }
+
          // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des categories 
         public function viewCat(){
             
-            $catManager = new CatManager();
+            $categorieManager = new CategoryManager();
 
             return [
                 "view" => VIEW_DIR."forum/listCategory.php", //  On retourne un tableau contenant le chemin de la vue à afficher et les données à transmettre à la vue
                 "data" => [ //data prend la valeur d'un tableau qui contient Categories
-                    "categories" => $catManager->findAll()// La méthode findAll de la classe catManager renvoie la liste des categories
+                    "categories" => $categorieManager->findAll()// La méthode findAll de la classe catManager renvoie la liste des categories
                 ]
             ];
+
+        }
+
+        public function findTopicsByCat($id){
+            $categorieManager = new CategoryManager();
+            $topicManager = new TopicManager();
+
+            return [
+                "view" => VIEW_DIR."forum/listTopicsByCategory.php",
+                "data" => [
+                    "categories" => $categorieManager->findOneById($id),
+                    // "categories" => $categorieManager->findAll(),
+                    // "categories2" => $categorieManager->catByTopic($id),
+                    "topics" => $topicManager->TopicByCat($id)
+                ]
+            ];
+
 
         }
 
