@@ -16,9 +16,16 @@
 
         }
 
-        public function register(){
-            // hache le passeword = transformer le mp en clé unique indechifrable dans la bdd = defintif voir OWASP pour les recommmandaion 
+        public function registerForm(){
+            // hache le passeword = transformer le mp en clé unique indechifrable dans la bdd = defintif voir OWASP pour les recommmandaion
+            return [
+                "view" => VIEW_DIR."security/login.php", 
+                "data" => null,
+
+            ]; 
+
 
         }
+        
         
     }
