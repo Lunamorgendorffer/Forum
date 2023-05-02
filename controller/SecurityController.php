@@ -70,4 +70,68 @@
                 echo "Le formulaire n'a pas été soumis.";
             }
         }
+
+        public function loginForm(){
+            // hache le passeword = transformer le mp en clé unique indechifrable dans la bdd = defintif voir OWASP pour les recommmandaion
+            return [
+                "view" => VIEW_DIR."security/login.php", 
+                "data" => null,
+            ]; 
+
+
+        }
+
+        public function login (){
+            // password_verify 
+            // user en session 
+            if (!empty($_POST)) {
+                
+                $pseudo = filter_input(INPUT_POST,"pseudo", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $password = filter_input(INPUT_POST,"password", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                
+                if($pseudo&&$password){
+                    $manager= new UserManager();
+                    $user = $manager ->findOneByPseudo($pseudo);
+
+                    if ($user){
+
+                        $hash = $user->getPassword();
+
+                        if(password_verify($password, $hash)){
+
+                            SESSION::setUser($user); 
+                            
+                            SESSION::addFlash("success", "connected"); 
+                            $this->redirectTo("home", "home");                            
+                            
+                        }else {
+
+                            SESSION::addFlash("success", "username or password incorrect"); 
+                            
+                            return [
+                                "view" => VIEW_DIR . "security/login.php",
+                                "data" => null,
+                                
+                            ];
+                        }
+
+                    }
+
+                    
+                }
+            }
+
+
+            
+        }
+
+
+
+        public function modifyPasseword(){
+
+        }
+
+        public function logout(){
+
+        }
     }
