@@ -3,6 +3,7 @@
     namespace Controller;
 
     use App\Session;
+    use App\DAO;
     use App\AbstractController;
     use App\ControllerInterface;
     use Model\Managers\TopicManager;
@@ -39,6 +40,52 @@
             ];
 
         }
+
+        public function viewAddTopic (){
+            $topicManager = new TopicManager();
+           
+            return [
+                "view" => VIEW_DIR."forum/ajouterTopic.php",
+                "data" => [
+                    "categories" => $topicManager->findAll()
+                ]
+            ];
+
+        }
+
+        public function addTopic (){
+            if(!empty($_POST)){
+                $title = filter_input(INPUT_POST, "title", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $category = filter_input(INPUT_POST, "category", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $user =  Session::getUser()->getId();
+                
+                // $category = isset($_GET['id']) ? $_GET['id'] : '';
+                var_dump($category);
+
+                if($title){
+                    $topicManager = new TopicManager(); 
+
+                    if ($topicManager->add([
+                        "title" => $title,
+                        "user_id" => $user,
+                        "category_id" => $category
+                            
+                    ])){
+                        
+                        header('Location:index.php?ctrl=home');
+
+                    }
+
+
+                }
+                
+
+            }
+
+        }
+
+    
+
         
         // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des utilisateurs
         public function viewUser(){
@@ -53,7 +100,7 @@
             ];
         }
 
-         // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des messages
+        // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des messages
         public function viewPost(){
             $postManager = new PostManager(); // On instancie un objet de la classe PostManager pour récupérer la liste des messages
 
@@ -67,21 +114,47 @@
 
         }
 
-        public function addPostByTopic(){
-            $topicManager = new TopicManager();
+        public function viewAddPost (){
             $postManager = new PostManager();
+           
             return [
-                "view" => VIEW_DIR."forum/topics/detailTopic.php", // On retourne un tableau contenant le chemin de la vue à afficher et les données à transmettre à la vue
-                "data" => [ //data prend la valeur des tableaux 
-                    "topic" => $topicManager->findOneById($id),
-                    "post" => $postManager->add($data), 
+                "view" => VIEW_DIR."forum/topics/detailTopic.phpp",
+                "data" => [
+                    "post" => $postManager->findAll()
                 ]
-
             ];
 
         }
 
-         // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des categories 
+        public function addPostByTopic (){
+            if(!empty($_POST)){
+                $title = filter_input(INPUT_POST, "title", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $post = filter_input(INPUT_POST, "post", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $user =  Session::getUser()->getId();
+                
+
+                if($title&&$post){
+                    $topicManager = new TopicManager(); 
+
+                    $topicManager->add([
+                        "title" => $title,
+                        "user_id" => $user,
+                        "category_id" => $category
+                            
+                    ]);
+
+
+
+                }
+                
+
+            }
+
+        }
+
+
+
+        // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des categories 
         public function viewCat(){
             
             $categorieManager = new CategoryManager();
@@ -112,4 +185,51 @@
 
         }
 
-    }
+        public function viewAddCat(){
+            $categorieManager = new CategoryManager();
+           
+            return [
+                "view" => VIEW_DIR."forum/ajouterCategory.php",
+                "data" => [
+                    "categories" => $categorieManager->findAll()
+                ]
+            ];
+
+        }
+
+       
+
+            public function addCategory(){
+                if(!empty($_POST)){
+                    
+                    $category = filter_input(INPUT_POST, "category", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+                    if($category){
+                        $manager = new CategoryManager(); 
+                        $user = $manager->findOneById($category); 
+                        if (!$user){
+
+                            if ($manager->add([
+                                "nameCategory" => $category,
+                                
+                            ])){
+                                header('Location:index.php?ctrl=home');
+
+                            }
+
+                        
+                        }
+                       
+                    }
+                    var_dump($category);
+
+
+    
+                }
+    
+               
+            }
+            
+        }
+    
+    
