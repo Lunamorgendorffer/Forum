@@ -17,4 +17,7 @@ $categories = $result["data"]['categories'];
     </div>
 </div>
 <?php } ?>
+<div class="container" style="display: flex;justify-content: center;;">
+    <a href="index.php?ctrl=forum&action=viewAddCat" class="btn btn-primary">Add</a>
+</div>
   
