@@ -16,7 +16,7 @@
         }
 
         public function findOneByPseudo($data){
-            $sql = "SELECT u.pseudo
+            $sql = "SELECT *
                     FROM ".$this->tableName." u
                     WHERE u.pseudo = :pseudo
             ";
