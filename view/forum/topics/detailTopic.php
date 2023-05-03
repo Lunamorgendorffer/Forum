@@ -2,6 +2,7 @@
 
 $topic = $result["data"]['topic'];
 $messages = $result["data"]["messages"];
+
 // var_dump($messages);
  
 ?>
@@ -25,3 +26,23 @@ $messages = $result["data"]["messages"];
 </div>
 <?php } ?>
 
+<div class="container" style="display: flex;justify-content: center;;">
+    <a  class="btn btn-primary" href="index.php?ctrl=forum&action=viewAddPost&id=<?=$_GET['id']?>">Add</a>
+</div>
+
+<?php if(App\Session::getUser()){?>
+    <form action="index.php?ctrl=forum&action=addPostByTopic" method="post">
+
+    <p>
+        <label>New Post</label>
+        <textarea id="post" name="post" rows="4" cols="50"></textarea>
+    </p>
+    
+
+    <p>
+        <input type="submit" name="submit" value="Ajouter">
+    </p>
+    
+</form>
+
+<?php}?>
