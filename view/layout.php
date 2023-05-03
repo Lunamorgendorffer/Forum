@@ -35,8 +35,9 @@
                         
                         if(App\Session::getUser()){
                             ?>
-                            <a href="/security/viewProfile.html"><span class="fas fa-user"></span>&nbsp;<?= App\Session::getUser()?></a>
-                            <a href="/security/logout.html">Déconnexion</a>
+                            <a href="/security/viewProfile.html"><span class="fas fa-user"></span>&nbsp;<?= App\Session::getUser()->getPseudo()?></a>
+                            <a href="index.php?ctrl=security&action=logout">Déconnexion</a>
+                            <a href="index.php?ctrl=forum&action=viewCat">Category</a>
                             <?php
                         }
                         else{
