@@ -28,5 +28,34 @@
             );
         }
 
+        public function addCategory(){
+            if(isset($_POST['submit'])){
+                
+                $category = filter_input(INPUT_POST, "category", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+               
+                if($category){
+                    $cat = new CategoryManager(); 
+                    $check = $cat->findOneById($cat); 
+
+                        if (!$check){
+                           
+                            $check->add([
+                                "nameCategory" => $category,
+                                
+                            ]);
+                                // header('Location:index.php?ctrl=home')
+                            
+
+                }
+
+
+            }else {
+                echo "Le formulaire n'a pas été soumis.";
+            }
+
+           
+        }
+
 
     }
+}
