@@ -4,7 +4,7 @@
 ?>
 
 <h3>Add Post</h3>
-<form action="index.php?action=AddPostByTopic" method="post">
+<form action="index.php?ctrl=forum&action=addPostByTopic" method="post">
 
     <p>
         <label>New Post</label>
