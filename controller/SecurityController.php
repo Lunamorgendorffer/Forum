@@ -19,7 +19,7 @@
         public function registerForm(){
             // hache le passeword = transformer le mp en clé unique indechifrable dans la bdd = defintif voir OWASP pour les recommmandaion
             return [
-                "view" => VIEW_DIR."security/login.php", 
+                "view" => VIEW_DIR."security/register.php", 
                 "data" => null,
 
             ]; 
@@ -51,7 +51,7 @@
                                 "mail"=> $email,
                                 "password"=> $hash,
                             ])){
-                                header('Location:index.php?ctrl=home');
+                                // header('Location:index.php?ctrl=home');
 
                             }
 
@@ -91,11 +91,13 @@
                 
                 if($pseudo&&$password){
                     $manager= new UserManager();
-                    $user = $manager ->findOneByPseudo($pseudo);
+                    $user = $manager->findOneByPseudo($pseudo);
+                    var_dump($user);
 
                     if ($user){
 
                         $hash = $user->getPassword();
+                        // var_dump($hash);
 
                         if(password_verify($password, $hash)){
 
@@ -133,5 +135,12 @@
 
         public function logout(){
 
+            session_destroy();
+            
+            return [
+                "view" => VIEW_DIR."home.php", 
+
+            ]; 
+            
         }
     }
