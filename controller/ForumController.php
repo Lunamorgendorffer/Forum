@@ -56,33 +56,41 @@
         public function addTopic (){
             if(!empty($_POST)){
                 $title = filter_input(INPUT_POST, "title", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $text = filter_input(INPUT_POST, "text", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $category = filter_input(INPUT_POST, "category", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $user =  Session::getUser()->getId();
                 
                 // $category = isset($_GET['id']) ? $_GET['id'] : '';
-                var_dump($category);
+                // var_dump($category);
 
                 if($title){
                     $topicManager = new TopicManager(); 
+                    $post = new PostManager();
 
-                    if ($topicManager->add([
+                    $topic=$topicManager->add([
                         "title" => $title,
                         "user_id" => $user,
                         "category_id" => $category
                             
-                    ])){
+                    ]);
+
+                    $post->add([
+                        "message" => $text,
+                        "user_id" => $user,
+                        "topic_id" =>$topic
+                    ]);
                         
-                        header('Location:index.php?ctrl=home');
-
-                    }
-
+                    header('Location:index.php?ctrl=home');
 
                 }
-                
+
 
             }
+                
 
         }
+
+        
 
     
 
@@ -120,7 +128,7 @@
             return [
                 "view" => VIEW_DIR."forum/topics/detailTopic.phpp",
                 "data" => [
-                    "post" => $postManager->findAll()
+                    "messages" => $postManager->findAll()
                 ]
             ];
 
@@ -128,30 +136,31 @@
 
         public function addPostByTopic (){
             if(!empty($_POST)){
-                $title = filter_input(INPUT_POST, "title", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $post = filter_input(INPUT_POST, "post", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $user =  Session::getUser()->getId();
-                
+                $topic = $_GET['id'];
 
-                if($title&&$post){
-                    $topicManager = new TopicManager(); 
+                if($post){
+                    $topicManager = new TopicManager();
+                    $postManager = new PostManager(); 
 
-                    $topicManager->add([
-                        "title" => $title,
+                    $postManager->add([
+                        "message" => $post,
                         "user_id" => $user,
-                        "category_id" => $category
+                        "topic_id" => $topic
                             
                     ]);
 
-
-
+                    header('Location:index.php?ctrl=home');
+                    
                 }
-                
+
+
 
             }
+                
 
         }
-
 
 
         // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des categories 
@@ -199,14 +208,15 @@
 
        
 
-            public function addCategory(){
-                if(!empty($_POST)){
+        public function addCategory(){
+            if(!empty($_POST)){
                     
-                    $category = filter_input(INPUT_POST, "category", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $category = filter_input(INPUT_POST, "category", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
                     if($category){
                         $manager = new CategoryManager(); 
                         $user = $manager->findOneById($category); 
+
                         if (!$user){
 
                             if ($manager->add([
@@ -221,15 +231,15 @@
                         }
                        
                     }
-                    var_dump($category);
+                var_dump($category);
 
 
     
-                }
+            }
     
                
-            }
-            
         }
+            
+    }
     
     
