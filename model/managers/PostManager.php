@@ -67,6 +67,24 @@
                 echo "Pikachu";
             }
         }
+
+        public function deletePosts($id)
+	{
+		$sql = "DELETE FROM post p
+        WHERE p.topic_id = :id";
+
+		return DAO::delete($sql, ['id' => $id]);
+	}
+
+    
+    public function UpdatePost($post, $id)
+    {
+        $sql = "UPDATE ".$this->tableName."
+        SET message = :message 
+        WHERE id_".$this->tableName." = :id";
+        
+        DAO::update($sql, ['message' => $post, 'id' => $id]);
+    }
       
         
-    }
+}
