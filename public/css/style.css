@@ -28,13 +28,12 @@ footer {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    height: 100px;
     background-color: #032f70;
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    flex: 1;
+    
 }
 
 footer a {
