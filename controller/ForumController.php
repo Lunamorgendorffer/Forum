@@ -110,6 +110,20 @@
             ];
         }
 
+
+        // fonction pour supprimer un message  
+        public function deleteTopic($id){ 
+            $topicManager =new TopicManager();
+         
+            
+            // requete pour récupérer l'id du topic avant la suppression par la table message 
+            $id2 = $postManager->findOneById($id)->getTopic()->getId();
+            $postManager->delete($id);
+
+            $this->redirectTo("forum", "detailTopic", $id);
+          
+        }
+
      /******************************************************************USER*************************************************************************************************/   
         
         // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des utilisateurs
