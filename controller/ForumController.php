@@ -80,9 +80,15 @@
                         "topic_id" =>$topic
                     ]);
                         
-                    header('Location:index.php?ctrl=home');
+                   
 
                 }
+                // header("index.php?ctrl=forum&action=findTopicsByCat&id=".$topicManager->getId());
+                return [
+                    "view" => VIEW_DIR."forum/topics/listTopicsByCategories.php", // renvoie la vue listtopics
+                    "data" => null, 
+    
+                ];
 
 
             }
@@ -90,10 +96,21 @@
 
         }
 
-        
-
+        public function editForm()
+        {
+            $topicManager = new TopicManager();
+            $postManager = new PostManager();
     
+            return [
+                "view" => VIEW_DIR . "forum/editTopic.php",
+                "data" => [
+                    "topic" => $topicManager->findOneById($_GET['id']),
+                    "post" => $postManager->findFirstById($_GET['id'])
+                ]
+            ];
+        }
 
+     /******************************************************************USER*************************************************************************************************/   
         
         // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des utilisateurs
         public function viewUser(){
@@ -121,6 +138,8 @@
             ];
 
         }
+
+        /******************************************************************POST*************************************************************************************************/  
 
         public function viewAddPost (){
             $postManager = new PostManager();
@@ -151,8 +170,7 @@
                             
                     ]);
 
-                    header('Location:index.php?ctrl=home');
-                    
+                    header("location:index.php?ctrl=forum&action=detailTopic&id=".$topic);
                 }
 
 
@@ -161,6 +179,21 @@
                 
 
         }
+
+        // fonction pour supprimer un message  
+        public function deletePost($id){ 
+            $postManager =new PostManager();
+         
+            
+            // requete pour récupérer l'id du topic avant la suppression par la table message 
+            $id2 = $postManager->findOneById($id)->getTopic()->getId();
+            $postManager->delete($id);
+
+            $this->redirectTo("forum", "detailTopic", $id);
+          
+        }
+
+        /******************************************************************CATEGORY*************************************************************************************************/  
 
 
         // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des categories 

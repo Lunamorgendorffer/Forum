@@ -20,6 +20,7 @@ var_dump($messages);
     </div>
     <div class="button" style="display: flex;justify-content: center;">
         <button type="button" class="btn btn-secondary btn-sm">Edit</button>
+        <a href="index.php?ctrl=forum&action=deletePost&id=<?=$message->getId()?>">Delete</a>
     </div>
 </div>
 <?php } ?>
