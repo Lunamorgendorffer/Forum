@@ -18,10 +18,12 @@ var_dump($messages);
         <p class="card-text" style="text-align: center; color: white; "><strong><?=$message->getMessage()?></strong></p>
         <p class= "card-text" style ="text-align: center; color: white;"></small><?=$message->getUser()->getPseudo()?></small></p>
     </div>
+    <?php if($topic->getUser()->getId() == App\Session::getUser()){?>
     <div class="button" style="display: flex;justify-content: center;">
         <button type="button" class="btn btn-secondary btn-sm">Edit</button>
         <a href="index.php?ctrl=forum&action=deletePost&id=<?=$message->getId()?>">Delete</a>
     </div>
+    <?php } ?>
 </div>
 <?php } ?>
 
