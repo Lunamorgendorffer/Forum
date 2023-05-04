@@ -10,6 +10,7 @@
         private $mail;
         private $registerDate;
         private $role;
+        private $password;
 
         public function __construct($data){         
             $this->hydrate($data);        
@@ -96,17 +97,45 @@
                 return $this->role;
         }
 
-        /**
+       /**
          * Set the value of role
          *
          * @return  self
          */ 
         public function setRole($role)
         {
-                $this->role = $role;
+                $this->role = json_encode($role);
 
                 return $this;
         }
 
+        public function hasRole($role){
+        
+                $result = $this->role== $role;
+                return $result; 
+
+        }
+
+        
+
+        /**
+         * Get the value of password
+         */ 
+        public function getPassword()
+        {
+                return $this->password;
+        }
+
+        /**
+         * Set the value of password
+         *
+         * @return  self
+         */ 
+        public function setPassword($password)
+        {
+                $this->password = $password;
+
+                return $this;
+        }
         
 }
