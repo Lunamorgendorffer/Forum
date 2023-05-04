@@ -31,15 +31,14 @@
 
         public function postFromTopicById($id){
             $sql = "SELECT * FROM post p
-                    INNER JOIN  topic t ON p.topic_id = t.id_topic
                     WHERE p.topic_id = :id
                     ORDER BY p.messCreationDate ASC
             ";
 
-            $params =['id'=> $id];
+      
 
             return $this->getMultipleResults(
-                    DAO::select($sql,$params), 
+                    DAO::select($sql,['id'=> $id],true), 
                     $this->className
             );
 
