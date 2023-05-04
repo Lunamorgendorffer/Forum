@@ -19,7 +19,7 @@
            $topicManager = new TopicManager();
         
             return [
-                "view" => VIEW_DIR."forum/topics/listTopics.php", // renvoie la vue listtopics
+                "view" => VIEW_DIR."forum/topics/listTopicsByCategory.php", // renvoie la vue listtopics
                 "data" => [ //data prend la valeur d'un tableau qui contient topics 
                     "topics" => $topicManager->findAllTopicsUser(), // Dans topicManager va me chercher la fonc findAll, trié par creation date, 
                 ], 
@@ -96,31 +96,21 @@
 
         }
 
-        public function editForm()
-        {
-            $topicManager = new TopicManager();
-            $postManager = new PostManager();
-    
-            return [
-                "view" => VIEW_DIR . "forum/editTopic.php",
-                "data" => [
-                    "topic" => $topicManager->findOneById($_GET['id']),
-                    "post" => $postManager->findFirstById($_GET['id'])
-                ]
-            ];
-        }
+        
 
 
         // fonction pour supprimer un message  
-        public function deleteTopic($id){ 
-            $topicManager =new TopicManager();
-         
+        public function deleteTopic($id){
+            // $postManager = new PostManager(); 
+            $topicManager = new TopicManager();
+            $topic= $topicManager->findOneById($id)->getCategory()->getId();
             
-            // requete pour récupérer l'id du topic avant la suppression par la table message 
-            $id2 = $postManager->findOneById($id)->getTopic()->getId();
-            $postManager->delete($id);
+            // $postManager->deletePosts($id);
+            $topicManager->delete($id);
 
-            $this->redirectTo("forum", "detailTopic", $id);
+
+
+            $this->redirectTo("forum", "findTopicsByCat", $topic);
           
         }
 
@@ -207,6 +197,42 @@
           
         }
 
+        public function viewEditPost($id){
+            $postManager = new PostManager();
+            // $post = $postManager->findOneByid($id)->getMessage();
+           
+            return [
+                "view" => VIEW_DIR."forum/editPost.php",
+                "data" => [
+                    "messages" => $postManager->findAll()
+                ]
+            ];
+
+        }
+
+        public function editPost($id){
+            // $topicManager = new TopicManager();
+            $postManager = new PostManager();
+
+            //je recupère l'user de mon post
+            $topicId = $postManager->findOneById($id)->getUser()->getId();
+
+            if (isset($_POST['submit']) && isset($_SESSION['user']))
+            {
+                $post = filter_input(INPUT_POST, "post", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+                if($post){
+                    $postManager->updatePost($post, $id);
+                } 
+            
+            }
+            // $this->redirectTo("forum", "detailTopic", );
+            // header("location:index.php?ctrl=forum&action=detailTopic&id=".$topicId);
+            header('Location:index.php?ctrl=home');
+        
+        }
+    
+
         /******************************************************************CATEGORY*************************************************************************************************/  
 
 
@@ -234,7 +260,8 @@
                     "categories" => $categorieManager->findOneById($id),
                     // "categories" => $categorieManager->findAll(),
                     // "categories2" => $categorieManager->catByTopic($id),
-                    "topics" => $topicManager->TopicByCat($id)
+                    "topics" => $topicManager->TopicByCat($id),
+                    "id" => $topicManager ->fetchId($id)
                 ]
             ];
 
