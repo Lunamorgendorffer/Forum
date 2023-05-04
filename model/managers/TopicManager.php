@@ -19,7 +19,7 @@
         // fonc pour recuperer les topics crée
         public function findAllTopicsUser(){
 
-            $sql = "SELECT t.id_topic, t.title, t.creationdate, t.user_id
+            $sql = "SELECT *
             FROM topic t 
             INNER JOIN user u ON u.id_user = t.user_id";
 
@@ -36,11 +36,25 @@
                 INNER JOIN category c ON c.id_category = t.category_id
                 WHERE t.category_id = :id "
             ;
-            
-            $params =['id'=> $id];      
+             
     
             return  $this->getMultipleResults(
-                DAO::select($sql, $params), 
+                DAO::select($sql,['id'=> $id],true), 
+                $this->className
+            );
+        }
+
+        public function fetchId($id){
+
+            $sql = "SELECT t.id_topic,t.title, t.creationDate,t.user_id
+                FROM topic t
+                INNER JOIN category c ON c.id_category = t.category_id
+                WHERE t.category_id = :id "
+            ;
+            
+                
+            return  $this->getMultipleResults(
+                DAO::select($sql,['id'=> $id],true), 
                 $this->className
             );
         }
