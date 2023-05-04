@@ -12,6 +12,11 @@
                     <input class="form-control" type="text" name="title" id="titre">
                     <input type="hidden" name="category" value = "<?=$_GET['id']?>">
                 </div>
+                <div class="mb-5 col-4">
+                    <label for="formGroupExampleInput" class="form-label">title</label>
+                    <input class="form-control" type="text" name="text" id="post">
+                </div>
+
             </div>
             <div class="d-flex justify-content-evenly">
                 <button class="btn btn-primary mb-5 " name="submit" type="submit">Add</button>
