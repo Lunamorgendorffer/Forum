@@ -104,7 +104,7 @@
                             SESSION::setUser($user); 
                             
                             SESSION::addFlash("success", "connected"); 
-                            $this->redirectTo("home", "home");                            
+                            header('Location:index.php?ctrl=home'); // renvoie à la page d'acceuil                           
                             
                         }else {
 
