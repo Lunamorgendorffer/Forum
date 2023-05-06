@@ -4,45 +4,45 @@ $topic = $result["data"]['topic'];
 $messages = $result["data"]["messages"];
 // var_dump($messages);
 var_dump($messages);
-
+$title="Detail topic"; 
 
  
 ?>
 
 
-<h1 style="text-align: center; margin-bottom: 30px">titre</h1>
-<div class="container" style="display: flex;flex-direction: column;align-items: center;/* justify-content: center; */">
-    <?php foreach ($messages as $message){ 
-        // var_dump($message);?>
-    <div class="card" style="background-image: url('https://i.pinimg.com/originals/c9/6d/09/c96d09dd9e2ac87f10301cb40f94e8d3.jpg'); width: 30%; margin: 25px; ">
-    <img img src="..." class="card-img-top" alt="...">
-    <div class="card-body">
-        <p class="card-text" style="text-align: center; color: white; "><strong><?=$message->getMessage()?></strong></p>
-        <p class= "card-text" style ="text-align: center; color: white;"></small><?=$message->getUser()->getPseudo()?></small></p>
+<h1 style="text-align: center; margin-bottom: 30px"><?=$topic->getTitle()?></h1>
+<div class="container">
+    <div class="flex"style="display: flex;flex-wrap: wrap; justify-content: center;">
+        <?php foreach ($messages as $message){ 
+            // var_dump($message);?>
+        <div class="card" style="background-color:#032f70;; width: 30%; margin: 25px;">
+        <div class="card-body">
+            <p class="card-text" style="text-align: center; color: white; "><strong><?=$message->getMessage()?></strong></p>
+            <p class= "card-text" style ="text-align: center; color: white;"></small><?=$message->getUser()->getPseudo()?></small></p>
+        </div>
+        <?php if(App\Session::getUser()){
+            if(App\Session::getUser()->getId() == $message->getUser()->getId()||App\Session::isAdmin()){ ?>
+            <div class="button" style="display: flex;justify-content: center;">
+                <a  class="btn btn-secondary" href="index.php?ctrl=forum&action=viewEditPost&id=<?=$_GET['id']?>">Edit</a>
+                <a  class="btn btn-danger" href="index.php?ctrl=forum&action=deletePost&id=<?=$message->getId()?>"> Delete</a>
+            </div>
+        <?php }}?> 
     </div>
-    <?php //if($message->getUser()->getPseudo() == App\Session::getUser()){
-        // echo " <div class='button' style='display: flex;justify-content: center;'>";
-        // echo"<button type='button' class='btn btn-secondary btn-sm'>Edit</button>";
-        // echo "<a href='index.php?ctrl=forum&action=deletePost&id='.$message->getId().'>Delete</a> </div>";
-    //}?>
-    
-    <div class="button" style="display: flex;justify-content: center;">
-        <a  class="btn btn-secondary" href="index.php?ctrl=forum&action=viewEditPost&id=<?=$_GET['id']?>">Edit</a>
-        <a  class="btn btn-danger" href="index.php?ctrl=forum&action=deletePost&id=<?=$message->getId()?>"> Delete</a>
+    <?php } ?>
+    <?php if(App\Session::getUser()){?>
+    <div class="container" style="display: flex;justify-content: center;;">
+        <button style="background-color:#032f70; width: 8%; height: 45px; border:none; border-radius: 10px;">
+            <a class="text-decoration-none" style="color: white;" href="index.php?ctrl=forum&action=viewAddPost&id=<?=$topic->getId()?>">New Post</a>
+        </button>
     </div>
-    
-</div>
-<?php } ?>
-
-<div class="container" style="display: flex;justify-content: center;;">
-    <a  class="btn btn-primary" href="index.php?ctrl=forum&action=viewAddPost&id=<?=$topic->getId()?>">Add</a>
-</div>
-
-<?php if(App\Session::getUser()){?>
+    <?php } ?>
+    <?php if(App\Session::getUser()||App\Session::isAdmin() ){?>
     <form action="index.php?ctrl=forum&action=addPostByTopic&id=<?=$topic->getId()?>" method="post">
         <label>New Post</label>
-        <textarea id="post" name="post" rows="4" cols="50"></textarea>
-        <input type="submit" name="submit" value="Ajouter">
+        <textarea id="post" name="post" rows="3" cols="50"></textarea>
+        <input type="submit" name="submit" value="Valider">
     </form>
-
 <?php } ?>
+</div>
+
+
