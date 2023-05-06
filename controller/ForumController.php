@@ -13,21 +13,88 @@
     
     class ForumController extends AbstractController implements ControllerInterface{
 
-        public function index(){
-          
+        /******************************************************************CATEGORY*************************************************************************************************/  
 
-           $topicManager = new TopicManager();
-        
+
+        // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des categories 
+        public function viewCat(){
+            
+            $categorieManager = new CategoryManager();
+
             return [
-                "view" => VIEW_DIR."forum/topics/listTopicsByCategory.php", // renvoie la vue listtopics
-                "data" => [ //data prend la valeur d'un tableau qui contient topics 
-                    "topics" => $topicManager->findAllTopicsUser(), // Dans topicManager va me chercher la fonc findAll, trié par creation date, 
-                ], 
-
+                "view" => VIEW_DIR."forum/listCategory.php", //  On retourne un tableau contenant le chemin de la vue à afficher et les données à transmettre à la vue
+                "data" => [ //data prend la valeur d'un tableau qui contient Categories
+                    "categories" => $categorieManager->findAll()// La méthode findAll de la classe catManager renvoie la liste des categories
+                ]
             ];
 
         }
 
+        
+        // fonction pour aller dans la vu addCat
+        public function viewAddCat(){
+            $categorieManager = new CategoryManager();
+           
+            return [
+                "view" => VIEW_DIR."forum/ajouterCategory.php",
+                "data" => [
+                    "categories" => $categorieManager->findAll()
+                ]
+            ];
+
+        }
+
+       
+        // fonction pour ajouter une category
+        public function addCategory(){
+            if(!empty($_POST)){ //vérifie si les données du formulaire ont été soumises. 
+                    
+                $category = filter_input(INPUT_POST, "category", FILTER_SANITIZE_FULL_SPECIAL_CHARS);// on utilise la fonction "filter_input()" pour nettoyer les données saisies par l'utilisateur et les stocke dans la variable $category.
+
+                if($category){
+                    $manager = new CategoryManager(); // on instancie  la classe "CategoryManager"
+                    $user = $manager->findOneById($category); //utilise la méthode "findOneById()" pour vérifier si une catégorie portant le même ID existe déjà dans la base de données.
+
+                    if (!$user){// Si la catégorie n'existe pas encore,
+
+                        if ($manager->add([ //  il utilise la méthode "add()" du "CategoryManager" pour ajouter la nouvelle catégorie à la base de données 
+                            "nameCategory" => $category, // en lui associant le nom de la catégorie saisie par l'utilisateur.
+                                
+                        ])){
+                             header('Location:index.php?ctrl=home'); // renvoie à la page d'acceuil
+
+                        }
+
+                        
+                    }
+                       
+                }
+
+            }
+               
+        }
+
+/******************************************************************TOPIC*************************************************************************************************/  
+        // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des topics
+        public function findTopicsByCat($id){
+            $categorieManager = new CategoryManager();
+            $topicManager = new TopicManager();
+
+            return [
+                "view" => VIEW_DIR."forum/listTopicsByCategory.php",
+                "data" => [
+                    "categories" => $categorieManager->findOneById($id),
+                    // "categories" => $categorieManager->findAll(),
+                    // "categories2" => $categorieManager->catByTopic($id),
+                    "topics" => $topicManager->TopicByCat($id),
+                    "id" => $topicManager ->fetchId($id)
+                ]
+            ];
+
+
+        }
+
+        // Cette méthode renvoie la vue et les données nécessaires pour afficher le topic
         public function detailTopic ($id){
             $topicManager = new TopicManager();
             $postManager = new PostManager();
@@ -41,8 +108,9 @@
 
         }
 
+        // fonction pour aller dans la vu addTopic
         public function viewAddTopic (){
-            $topicManager = new TopicManager();
+            $topicManager = new TopicManager();// On instancie un objet de la classe UserManager pour récupérer la liste des utilisateurs
            
             return [
                 "view" => VIEW_DIR."forum/ajouterTopic.php",
@@ -52,9 +120,11 @@
             ];
 
         }
-
+        
+        // fonction pour ajouter un topic + un 1er  message  
         public function addTopic (){
             if(!empty($_POST)){
+                // on utilise la fonction "filter_input()" pour nettoyer les données saisies par l'utilisateur et les stocke dans les variables
                 $title = filter_input(INPUT_POST, "title", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $text = filter_input(INPUT_POST, "text", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $category = filter_input(INPUT_POST, "category", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -64,9 +134,10 @@
                 // var_dump($category);
 
                 if($title){
-                    $topicManager = new TopicManager(); 
-                    $post = new PostManager();
+                    $topicManager = new TopicManager(); // On instancie un objet de la classe TopicManager 
+                    $post = new PostManager(); // On instancie un objet de la classe PostManager 
 
+                    //la méthode "add()" de "TopicManager" pour ajouter un nouveau sujet à la base de données
                     $topic=$topicManager->add([
                         "title" => $title,
                         "user_id" => $user,
@@ -74,6 +145,7 @@
                             
                     ]);
 
+                    // la méthode "add()" de "PostManager" pour ajouter le message du sujet à la base de données 
                     $post->add([
                         "message" => $text,
                         "user_id" => $user,
@@ -83,12 +155,11 @@
                    
 
                 }
-                // header("index.php?ctrl=forum&action=findTopicsByCat&id=".$topicManager->getId());
-                return [
-                    "view" => VIEW_DIR."forum/topics/listTopicsByCategories.php", // renvoie la vue listtopics
-                    "data" => null, 
-    
-                ];
+                header("index.php?ctrl=forum&action=findTopicsByCat");
+                //header("Location: index.php?ctrl=forum&action=findTopicsByCat&id=" . $category);
+
+                
+                
 
 
             }
@@ -97,51 +168,20 @@
         }
 
         
-
-
-        // fonction pour supprimer un message  
+        // fonction pour supprimer Topic  
         public function deleteTopic($id){
             // $postManager = new PostManager(); 
-            $topicManager = new TopicManager();
-            $topic= $topicManager->findOneById($id)->getCategory()->getId();
+            $topicManager = new TopicManager(); //Elle crée une instance de la classe "TopicManager"
+            $topic= $topicManager->findOneById($id)->getCategory()->getId(); // on utilise la méthode "findOneById()" pour récupérer les données du sujet à partir de son ID.
             
             // $postManager->deletePosts($id);
-            $topicManager->delete($id);
-
-
+            $topicManager->delete($id);//on utilise la méthode "delete()" sur "TopicManager" pour supprimer le sujet de la base de données.
 
             $this->redirectTo("forum", "findTopicsByCat", $topic);
           
         }
 
-     /******************************************************************USER*************************************************************************************************/   
-        
-        // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des utilisateurs
-        public function viewUser(){
-            
-            $userManager = new UserManager(); // On instancie un objet de la classe UserManager pour récupérer la liste des utilisateurs
-
-            return[ // On retourne un tableau contenant le chemin de la vue à afficher et les données à transmettre à la vue
-                "view" => VIEW_DIR."forum/listUsers.php", 
-                "data" => [ 
-                    "users" => $userManager->findAll(), // La méthode findAll() de la classe UserManager renvoie la liste des utilisateurs
-                ]
-            ];
-        }
-
-        // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des messages
-        public function viewPost(){
-            $postManager = new PostManager(); // On instancie un objet de la classe PostManager pour récupérer la liste des messages
-
-            return [
-                "view" => VIEW_DIR."forum/listPosts.php", // On retourne un tableau contenant le chemin de la vue à afficher et les données à transmettre à la vue
-                "data" => [ //data prend la valeur d'un tableau qui contient Post
-                    "post" => $postManager->findAllPostUser(), // La méthode findAllPost() de la classe PostManager renvoie la liste des messages
-                ]
-
-            ];
-
-        }
+     
 
         /******************************************************************POST*************************************************************************************************/  
 
@@ -217,7 +257,7 @@
             //je recupère l'user de mon post
             $topicId = $postManager->findOneById($id)->getUser()->getId();
 
-            if (isset($_POST['submit']) && isset($_SESSION['user']))
+            if (isset($_POST['submit']))
             {
                 $post = filter_input(INPUT_POST, "post", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
@@ -231,88 +271,38 @@
             header('Location:index.php?ctrl=home');
         
         }
-    
 
-        /******************************************************************CATEGORY*************************************************************************************************/  
-
-
-        // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des categories 
-        public function viewCat(){
+    /******************************************************************USER*************************************************************************************************/   
+        
+        // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des utilisateurs
+        public function viewUser(){
             
-            $categorieManager = new CategoryManager();
+            $userManager = new UserManager(); // On instancie un objet de la classe UserManager pour récupérer la liste des utilisateurs
+
+            return[ // On retourne un tableau contenant le chemin de la vue à afficher et les données à transmettre à la vue
+                "view" => VIEW_DIR."forum/listUsers.php", 
+                "data" => [ 
+                    "users" => $userManager->findAll(), // La méthode findAll() de la classe UserManager renvoie la liste des utilisateurs
+                ]
+            ];
+        }
+
+        // Cette méthode renvoie la vue et les données nécessaires pour afficher la liste des messages
+        public function viewPost(){
+            $postManager = new PostManager(); // On instancie un objet de la classe PostManager pour récupérer la liste des messages
 
             return [
-                "view" => VIEW_DIR."forum/listCategory.php", //  On retourne un tableau contenant le chemin de la vue à afficher et les données à transmettre à la vue
-                "data" => [ //data prend la valeur d'un tableau qui contient Categories
-                    "categories" => $categorieManager->findAll()// La méthode findAll de la classe catManager renvoie la liste des categories
+                "view" => VIEW_DIR."forum/listPosts.php", // On retourne un tableau contenant le chemin de la vue à afficher et les données à transmettre à la vue
+                "data" => [ //data prend la valeur d'un tableau qui contient Post
+                    "post" => $postManager->findAllPostUser(), // La méthode findAllPost() de la classe PostManager renvoie la liste des messages
                 ]
+
             ];
 
         }
-
-        public function findTopicsByCat($id){
-            $categorieManager = new CategoryManager();
-            $topicManager = new TopicManager();
-
-            return [
-                "view" => VIEW_DIR."forum/listTopicsByCategory.php",
-                "data" => [
-                    "categories" => $categorieManager->findOneById($id),
-                    // "categories" => $categorieManager->findAll(),
-                    // "categories2" => $categorieManager->catByTopic($id),
-                    "topics" => $topicManager->TopicByCat($id),
-                    "id" => $topicManager ->fetchId($id)
-                ]
-            ];
-
-
-        }
-
-        public function viewAddCat(){
-            $categorieManager = new CategoryManager();
-           
-            return [
-                "view" => VIEW_DIR."forum/ajouterCategory.php",
-                "data" => [
-                    "categories" => $categorieManager->findAll()
-                ]
-            ];
-
-        }
-
-       
-
-        public function addCategory(){
-            if(!empty($_POST)){
-                    
-                $category = filter_input(INPUT_POST, "category", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-
-                    if($category){
-                        $manager = new CategoryManager(); 
-                        $user = $manager->findOneById($category); 
-
-                        if (!$user){
-
-                            if ($manager->add([
-                                "nameCategory" => $category,
-                                
-                            ])){
-                                header('Location:index.php?ctrl=home');
-
-                            }
-
-                        
-                        }
-                       
-                    }
-                var_dump($category);
-
-
     
-            }
-    
-               
-        }
+
+        
             
     }
     
